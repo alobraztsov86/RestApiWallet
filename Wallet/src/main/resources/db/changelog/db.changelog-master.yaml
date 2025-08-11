@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/wallet_V001__initial.sql
+  - include:
+      file: db/changelog/changeset/wallet_V001__test_wallet.sql
+  - include:
+      file: db/changelog/changeset/wallet_V003__transaction_table.sql
+  - include:
+      file: db/changelog/changeset/wallet_V004__wallet_amount_type_change.sql

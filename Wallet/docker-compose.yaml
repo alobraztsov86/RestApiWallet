@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db_wallet
+    environment:
+      POSTGRES_DB: wallet_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql  # SQL-скрипты при старте
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  app:
+    build: .  # Собирает образ из Dockerfile
+    container_name: wallet_app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/wallet_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:  # Постоянное хранилище для БД
+
+networks:
+  app-network:
+    driver: bridge
